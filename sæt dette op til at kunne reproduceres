@@ -1,0 +1,30 @@
+	
+
+library(tidyverse)
+
+unicode_points <- c(32, 198, 84, 68, 48, 48, 53, 32, 70, 50, 57, 54, 48, 49, 32, 198, 75, 69, 48, 56, 48)
+
+s1_utf8 <- intToUtf8(unicode_points)
+
+s1_latin1 <- iconv(x = s1_utf8, from = "UTF-8", to = "latin1")
+
+Encoding(s1_latin1) <- "latin1" 
+
+df1 <- tibble(s1)
+
+
+
+rx_sep <- "\\bT.....\\b"
+
+s1 |> 
+  str_split(rx_sep)
+
+# fails
+df1 |> 
+  separate_rows(s1, sep = rx_sep)
+
+# works
+df1 |> 
+  mutate(s1 = Encoding(s1, "latin1")) |> 
+  separate_rows(s1, sep = rx_sep)
+
